@@ -8,11 +8,6 @@ public class Wizard extends Character{
         super();
     }
 
-    public Wizard(String name) {
-        super();
-        this.name = name;
-    }
-
     //Se implementan metodos de la clase
     @Override
     public void attack() {
@@ -71,11 +66,12 @@ public class Wizard extends Character{
     @Override
     public String toString() {
         return String.format(
-                "Wizard{ name= %s, location= $s, life= %d, magicEnergy= %d}",
+                "Wizard{ name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d}",
                 name,
                 location,
                 life,
-                magicEnergy
+                magicEnergy,
+                spells
         );
     }
 }

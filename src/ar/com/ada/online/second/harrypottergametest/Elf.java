@@ -5,7 +5,6 @@ import java.util.Objects;
 public class Elf extends Character {
     public Elf() {
         super();
-
     }
 
 
@@ -65,11 +64,12 @@ public class Elf extends Character {
     @Override
     public String toString() {
         return String.format(
-                "Elf { name= %s, location= $s, life= %d, magicEnergy= %d}",
+                "Elf { name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d}",
                 name,
                 location,
                 life,
-                magicEnergy
+                magicEnergy,
+                spells
         );
     }
 }
