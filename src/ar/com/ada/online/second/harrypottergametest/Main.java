@@ -10,7 +10,7 @@ public class Main {
         GamePlay player = new GamePlay();
         //Se ejecuta el metodo una vez
         player.ChoosePlayer();
-        player.chooseSpells();
+        player.loadSpellCharacters();
 
 
     }

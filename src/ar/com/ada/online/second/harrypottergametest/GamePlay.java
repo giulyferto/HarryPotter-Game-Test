@@ -32,117 +32,183 @@ public class GamePlay {
         return character;
     }
 
-
     private Wizard chooseWizard() {
         Wizard wizard = new Wizard();
-        List<String> wizardsNames = new ArrayList<String>();
-
         System.out.println("Seleccione un mago de la lista: ");
-        System.out.println("\t1) Harry Potter");
-        System.out.println("\t2) Draco Malfoy");
-        System.out.println("\t3) Hermione Granger");
-        System.out.println("\t4) Albus Dumbledore");
-        System.out.println("\t5) Severus Snape");
+        List<String> wizardsNames = Arrays.asList("Harry Potter", "Draco Malfoy", "Hermione Granger", "Albus Dumbledore", "Severus Snape");//Metodo estatico
+        for (int i = 0; i < wizardsNames.size(); i++) {
+            System.out.println("\t" + (i + 1) + " " + wizardsNames.get(i));
+        }
 
         int option = keyboard.nextInt();
         switch (option) {
             case 1:
-                wizard.setName("Harry Potter");
-                wizardsNames.add("Harry Potter");
+                String name1 = wizardsNames.get(0);
+                wizard.setName(name1);
                 break;
             case 2:
-                wizard.setName("Draco Malfoy");
-                wizardsNames.add("Draco Malfoy");
+                String name2 = wizardsNames.get(1);
+                wizard.setName(name2);
                 break;
             case 3:
-                wizard.setName("Hermione Granger");
-                wizardsNames.add("Hermione Granger");
+                String name3 = wizardsNames.get(2);
+                wizard.setName(name3);
                 break;
             case 4:
-                wizard.setName("Albus Dumbledore");
-                wizardsNames.add("Albus Dumbledore");
+                String name4 = wizardsNames.get(3);
+                wizard.setName(name4);
                 break;
             case 5:
-                wizard.setName("Severus Snape");
-                wizardsNames.add("Severus Snape");
+                String name5 = wizardsNames.get(4);
+                wizard.setName(name5);
                 break;
             default:
                 System.out.println("Debe elegir una opcion valida");
                 wizard = null;
 
         }
+        Wand wand = selectionOfWand();
+        wizard.setWand(wand);
+        wizard.getLocation();
+        wizard.setLocation(getLocation());
         return wizard;
     }
 
     private Elf chooseElf() {
         Elf elf = new Elf();
-        List<String> elfNames = new ArrayList<String>();
         System.out.println("Seleccione un Elfo de la lista: ");
-        System.out.println("\t1) Dobby");
-        System.out.println("\t2) Kreacher");
-        System.out.println("\t3) Hokey");
-        System.out.println("\t4) Winky");
+        List<String> elfNames = Arrays.asList("Dobby", "Kreacher", "Hokey", "Winky");
+        for (int i = 0; i < elfNames.size(); i++) {
+            System.out.println("\t" + (i + 1) + " " + elfNames.get(i));
+        }
 
         int option = keyboard.nextInt();
 
         switch (option) {
             case 1:
-                elf.setName("Dobby");
-                elfNames.add("Dobby");
+                String name1 = elfNames.get(0);
+                elf.setName(name1);
                 break;
             case 2:
-                elf.setName("Kreacher");
-                elfNames.add("Kreacher");
+                String name2 = elfNames.get(1);
+                elf.setName(name2);
                 break;
             case 3:
-                elf.setName("Hokey");
-                elfNames.add("Hokey");
+                String name3 = elfNames.get(2);
+                elf.setName(name3);
                 break;
             case 4:
-                elf.setName("Winky");
-                elfNames.add("Winky");
+                String name4 = elfNames.get(3);
+                elf.setName(name4);
                 break;
             default:
                 System.out.println("Debe elegir una opcion valida");
                 elf = null;
         }
+        elf.getLocation();
+        elf.setLocation(getLocation());
         return elf;
     }
 
-    public void chooseSpells() {
-        Spells spells = new Spells();
-        int continueMenu;
-        do {
-            System.out.println("Por favor ingrese una categoria de hechizos: \n");
-            System.out.println("\t1)Hechizos de Ataque\n");
-            System.out.println("\t2)Hechizos de Sanacion\n");
-            System.out.println("\t3)Hechizos de Recuperacion\n");
-            int option = keyboard.nextInt();
-
-            switch (option) {
-                case 1:
-                    getAttackSpells(keyboard);
-                    if (spells != null)
-                        spells.addAttackSpell();
-                    break;
-                case 2:
-                    getHealingSpells(keyboard);
-                    break;
-                case 3:
-                    getRecoverySpells(keyboard);
-                    break;
-                default:
-                    System.out.println("Opcion incorrecta.");
-            }
-            System.out.println("Desea agregar otro Hechizo?: \n\t1) Si\n\t2)No");
-            continueMenu = keyboard.nextInt();
-
-        } while (continueMenu == 1);
+    private char getLocation() {
+        System.out.println("Seleccione su ubicacion: ");
+        System.out.println("A B C");
+        char location = keyboard.next().charAt(0);
+        return location;
     }
-    private Spells getAttackSpells(Scanner keyboard) {
-        Spells spells = new Spells();
 
-        Set<String> attackSpells = new HashSet<String>();
+
+    public Wand selectionOfWand() {
+        Wand wand = new Wand();
+        Random rand = new Random(System.nanoTime());
+        System.out.println("\nLa varita escoge al mago...");
+        int random = rand.nextInt(7);
+        int option = random;
+        switch (option) {
+            case 1:
+                wand.setName("Varita de Sauco");
+                wand.setPower(60);
+                break;
+            case 2:
+                wand.setName("Varita de Pluma de fénix");
+                wand.setPower(50);
+                break;
+            case 3:
+                wand.setName("Varita de Fresno");
+                wand.setPower(40);
+                break;
+            case 4:
+                wand.setName("Varita de Madera de serpiente");
+                wand.setPower(30);
+                break;
+            case 5:
+                wand.setName("Varita de Abedul");
+                wand.setPower(20);
+                break;
+            case 6:
+                wand.setName("Varita de Espino");
+                wand.setPower(10);
+                break;
+            default:
+                wand.setName("Varita de Palisandro");
+                wand.setPower(5);
+                break;
+        }
+        System.out.println("\t Te ha escogido la " + wand.getName() + " que te añade " + wand.getPower() + " puntos de poder " + "\n");
+        return wand;
+    }
+
+    public void loadSpellCharacters() {
+        System.out.println("\n\tJugador 1... Escoge 6 hechizos: \n");
+        chooseSpells(playerOne);
+        System.out.println(playerOne.getSpells());
+        System.out.println("\n\tJugador 2... Escoge 6 hechizos: \n");
+        chooseSpells(playerTwo);
+        System.out.println(playerTwo.getSpells());
+    }
+
+    public void chooseSpells(Character character) {
+        Set<Spell> spells = new HashSet<>();
+//        Si no se inivializaba la variable aux me marcaba error
+        boolean aux = false;
+        for (int i = 0; i < 6; i++) {
+            do {
+                System.out.println("Por favor ingrese una categoria de hechizos: \n");
+                System.out.println("\t1)Hechizos de Ataque\n");
+                System.out.println("\t2)Hechizos de Sanacion\n");
+                System.out.println("\t3)Hechizos de Recuperacion\n");
+                int option = keyboard.nextInt();
+
+                switch (option) {
+                    case 1:
+                        Spell attackSpell = getAttackSpells(keyboard);
+                        spells.add(attackSpell);
+                        /*if (spells != null)
+                            attackSpell.addAttackSpell();*/
+                        break;
+                    case 2:
+                        Spell healingSpell = getHealingSpells(keyboard);
+                        spells.add(healingSpell);
+                        break;
+                    case 3:
+                        Spell recoverySpell = getRecoverySpells(keyboard);
+                        spells.add(recoverySpell);
+                        break;
+                    default:
+                        aux = true;
+                        System.out.println("Opcion incorrecta.");
+                }
+                /*System.out.println("Desea agregar otro Hechizo?: \n\t1) Si\n\t2)No");
+                continueMenu = keyboard.nextInt();*/
+
+            } while (aux);
+        }
+        character.setSpells(spells);
+    }
+
+    private AttackSpell getAttackSpells(Scanner keyboard) {
+        AttackSpell spell = new AttackSpell();
+
         System.out.println("\nHechizos de ataque:");
         System.out.println("\t1) Avada Kedravra: \n 100pts de daño, 90pts energia magica requerida.");
         System.out.println("\t2) Imperius: \n 90pts de daño, 80pts de energia magica requerida.");
@@ -156,62 +222,53 @@ public class GamePlay {
         int option = keyboard.nextInt();
         switch (option) {
             case 1:
-                spells.setName("Avada Kedravra");
-                spells.setDamage(100);
-                spells.setMagicPower(90);
-                attackSpells.add("Avada Kedravra");
+                spell.setName("Avada Kedravra");
+                spell.setDamage(100);
+                spell.setMagicPower(90);
                 break;
             case 2:
-                spells.setName("Imperius");
-                spells.setDamage(90);
-                spells.setMagicPower(80);
-                attackSpells.add("Imperius");
+                spell.setName("Imperius");
+                spell.setDamage(90);
+                spell.setMagicPower(80);
                 break;
             case 3:
-                spells.setName("Cruciatus");
-                spells.setDamage(90);
-                spells.setMagicPower(80);
-                attackSpells.add("Cruciatus");
+                spell.setName("Cruciatus");
+                spell.setDamage(90);
+                spell.setMagicPower(80);
                 break;
             case 4:
-                spells.setName("Expulso");
-                spells.setDamage(25);
-                spells.setMagicPower(15);
-                attackSpells.add("Expulso");
+                spell.setName("Expulso");
+                spell.setDamage(25);
+                spell.setMagicPower(15);
                 break;
             case 5:
-                spells.setName("Expelliarmus");
-                spells.setDamage(20);
-                spells.setMagicPower(10);
-                attackSpells.add("Expelliarmus");
+                spell.setName("Expelliarmus");
+                spell.setDamage(20);
+                spell.setMagicPower(10);
                 break;
             case 6:
-                spells.setName("Sectum");
-                spells.setDamage(15);
-                spells.setMagicPower(8);
-                attackSpells.add("Sectum");
+                spell.setName("Sectum");
+                spell.setDamage(15);
+                spell.setMagicPower(8);
                 break;
             case 7:
-                spells.setName("Desmaius");
-                spells.setDamage(15);
-                spells.setMagicPower(10);
-                attackSpells.add("Desmaius");
+                spell.setName("Desmaius");
+                spell.setDamage(15);
+                spell.setMagicPower(10);
                 break;
             case 8:
-                spells.setName("Petrificus totalus");
-                spells.setDamage(10);
-                spells.setMagicPower(5);
-                attackSpells.add("Petrificus totalus");
+                spell.setName("Petrificus totalus");
+                spell.setDamage(10);
+                spell.setMagicPower(5);
                 break;
             default:
                 System.out.println("Opcion incorrecta.");
         }
-        return spells;
+        return spell;
     }
 
-    private Spells getHealingSpells(Scanner keyboard) {
-        Spells spells = new Spells();
-        Set<String> healingSpells = new HashSet<String>();
+    private HealingSpell getHealingSpells(Scanner keyboard) {
+        HealingSpell spell = new HealingSpell();
         System.out.println("\nHechizos de Sanacion: ");
         System.out.println("\t1) Anapneo: \n 20pts de sanacion, 15pts energia magica requerida.");
         System.out.println("\t2) Tergeo: \n 20pts de sanacion, 15pts de energia magica requerida.");
@@ -222,50 +279,43 @@ public class GamePlay {
         int option = keyboard.nextInt();
         switch (option) {
             case 1:
-                spells.setName("Anapneo");
-                spells.setRecovery(20);
-                spells.setMagicPower(15);
-                healingSpells.add("Anapneo");
+                spell.setName("Anapneo");
+                spell.setRecovery(20);
+                spell.setMagicPower(15);
                 break;
             case 2:
-                spells.setName("Tergeo");
-                spells.setRecovery(20);
-                spells.setMagicPower(15);
-                healingSpells.add("Tergeo");
+                spell.setName("Tergeo");
+                spell.setRecovery(20);
+                spell.setMagicPower(15);
                 break;
             case 3:
-                spells.setName("Ferula");
-                spells.setRecovery(15);
-                spells.setMagicPower(10);
-                healingSpells.add("Ferula");
+                spell.setName("Ferula");
+                spell.setRecovery(15);
+                spell.setMagicPower(10);
                 break;
             case 4:
-                spells.setName("Reparifors");
-                spells.setRecovery(10);
-                spells.setMagicPower(5);
-                healingSpells.add("Reparifors");
+                spell.setName("Reparifors");
+                spell.setRecovery(10);
+                spell.setMagicPower(5);
                 break;
             case 5:
-                spells.setName("Episkey");
-                spells.setRecovery(5);
-                spells.setMagicPower(3);
-                healingSpells.add("Episkey");
+                spell.setName("Episkey");
+                spell.setRecovery(5);
+                spell.setMagicPower(3);
                 break;
             case 6:
-                spells.setName("Vulnera Sanentur");
-                spells.setRecovery(5);
-                spells.setMagicPower(3);
-                healingSpells.add("Vulnera Sanentur");
+                spell.setName("Vulnera Sanentur");
+                spell.setRecovery(5);
+                spell.setMagicPower(3);
                 break;
             default:
                 System.out.println("Opcion incorrecta.");
         }
-        return spells;
+        return spell;
     }
 
-    private Spells getRecoverySpells(Scanner keyboard) {
-        Spells spells = new Spells();
-        Set<String> recoverySpells = new HashSet<String >();
+    private RecoverySpell getRecoverySpells(Scanner keyboard) {
+        RecoverySpell spells = new RecoverySpell();
         System.out.println("\nHechizos de Recuperacion: ");
         System.out.println("\t1) Contorsione: \n 15pts de sanacion, 8pts energia magica requerida.");
         System.out.println("\t2) Taenia: \n 15pts de sanacion, 8pts de energia magica requerida.");
@@ -280,42 +330,57 @@ public class GamePlay {
                 spells.setName("Contorsione");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Contorsione");
                 break;
             case 2:
                 spells.setName("Taenia");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Taenia");
                 break;
             case 3:
                 spells.setName("Ventriculum");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Ventriculum");
                 break;
             case 4:
                 spells.setName("Cortisem detraho");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Cortisem detraho");
                 break;
             case 5:
                 spells.setName("Enervate");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Enervate");
                 break;
             case 6:
                 spells.setName("Reparifors");
                 spells.setMagicPower(15);
                 spells.setMagicPower(8);
-                recoverySpells.add("Reparifors");
                 break;
             default:
                 System.out.println("Opcion incorrecta.");
         }
         return spells;
+    }
+
+    public void gameStarting() {
+        // Es un ciclo que durará hasta que uno de los jugadores muera y se realizará por turnos (magicEnergy = 0)
+        // En cada turno, el jugador debe ver el estado de su personaje (
+        // hacer la elección del hechizo que desea realizar (spellCasting())
+        // y todo lo que conlleva este hechizo. Luego de cada turno, se debe validar si
+        //  el oponente ya está muerto, en caso afirmativo, se debe terminar el ciclo y por ende el proceso
+        //mago oscuro o elfo libre (determinar por selección de hechizoz: cruciatus, avadakedavra e imperio JUNTOS).
+    }
+
+    public void spellCasting() {
+        //hacer la elección del hechizo que desea realizar
+        //seleccionar ubicación donde se arrojara el hechizo
+        //setear los atributos del jugador que afecta ese hechizo usado
+        //setear atributos del otro jugador si esta en la posición en la que se lanzo el hechizo
+    }
+
+    public void showWinner() {
+        //Muestra por pantalla el nombre del jugador que ganó y el estado de los personajes de la
+        // partida (ambos personajes).
     }
 
 

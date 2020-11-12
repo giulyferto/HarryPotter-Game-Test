@@ -3,9 +3,19 @@ package ar.com.ada.online.second.harrypottergametest;
 import java.util.Objects;
 
 public class Wizard extends Character{
+    protected Wand wand;
+
 
     public Wizard() {
         super();
+    }
+
+    public Wand getWand() {
+        return wand;
+    }
+
+    public void setWand(Wand wand) {
+        this.wand = wand;
     }
 
     //Se implementan metodos de la clase
@@ -55,7 +65,7 @@ public class Wizard extends Character{
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Wizard that = (Wizard) obj;
-        return super.equals(obj);
+        return super.equals(obj) && wand.equals(that.wand);
     }
 
     @Override
@@ -66,12 +76,13 @@ public class Wizard extends Character{
     @Override
     public String toString() {
         return String.format(
-                "Wizard{ name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d}",
+                "Wizard{ name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d, wand= %s}",
                 name,
                 location,
                 life,
                 magicEnergy,
-                spells
+                spells,
+                wand
         );
     }
 }
