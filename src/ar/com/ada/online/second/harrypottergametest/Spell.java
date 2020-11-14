@@ -7,8 +7,6 @@ public class Spell {
     protected Integer damage;
     protected  Integer recovery;
     protected  Integer magicPower;
-    protected  Integer counter = 0;
-
 
     public Spell() {
     }
@@ -45,18 +43,6 @@ public class Spell {
         this.magicPower = magicPower;
     }
 
-    public Integer getCounter() {
-        return counter;
-    }
-
-    public void setCounter(Integer counter) {
-        this.counter = counter;
-    }
-//Metodo para contar el tipo de hechizos de ataque
-    public Integer addAttackSpell() {
-        counter++;
-        return counter;
-    }
 
     @Override
     public int hashCode() {

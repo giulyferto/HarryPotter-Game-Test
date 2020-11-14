@@ -1,6 +1,7 @@
 package ar.com.ada.online.second.harrypottergametest;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class Elf extends Character {
     public Elf() {
@@ -45,9 +46,10 @@ public class Elf extends Character {
     }
 
     @Override
-    public void darkOrFree() {
+    public void setSpells(Set<Spell> spells) {
 
     }
+
     //hashCode equals and toString
     @Override
     public boolean equals(Object obj) {

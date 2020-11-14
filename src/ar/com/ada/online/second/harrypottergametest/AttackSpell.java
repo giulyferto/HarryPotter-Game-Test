@@ -3,9 +3,26 @@ package ar.com.ada.online.second.harrypottergametest;
 import java.util.Objects;
 
 public class AttackSpell extends Spell {
+    public static Integer counter = 0;
+    //public static int addAttackSpell;
+
 
     public AttackSpell() {
         super();
+    }
+    public Integer getCounter() {
+        return counter;
+    }
+
+    public void setCounter(Integer counter) {
+        this.counter = counter;
+    }
+
+    //Metodo para contar el tipo de hechizos de ataque
+    public void addAttackSpell(Spell spell) {
+        if (spell instanceof AttackSpell) {
+            counter++;
+        }
     }
 
     @Override

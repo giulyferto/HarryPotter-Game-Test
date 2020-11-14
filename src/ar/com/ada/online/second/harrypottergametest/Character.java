@@ -8,7 +8,8 @@ public abstract class Character {
     protected char location;
     protected Integer life = 100;
     protected Integer magicEnergy = 100;
-    protected Set <Spell> spells;
+    public String spells; //Tipo lista
+    protected Set<Spell> spellSet;
 //Constructor vacio
 
     public Character() {
@@ -48,12 +49,12 @@ public abstract class Character {
         this.magicEnergy = magicEnergy;
     }
 
-    public Set<Spell> getSpells() {
-        return spells;
+    public Set<Spell> getSpellSet() {
+        return spellSet;
     }
 
-    public void setSpells(Set<Spell> spells) {
-        this.spells = spells;
+    public void setSpellSet(Set<Spell> spellSet) {
+        this.spellSet = spellSet;
     }
 
     //metodos abstractos
@@ -71,9 +72,17 @@ public abstract class Character {
 
     public abstract void characterStatus();
 
-    public abstract void darkOrFree();
+    public boolean darkOrFree() {
+        int counter = 0;
+        for (Spell spell : spellSet) {
+            if (spell instanceof AttackSpell) {
+                counter++;
+            }
+        }
 
-    //
+        return counter > 3;
+    }
+    public abstract void setSpells(Set<Spell> spells);
 
     @Override
     public boolean equals(Object obj) {
@@ -83,24 +92,24 @@ public abstract class Character {
         return location == that.location &&
                 name.equals(that.name) &&
                 life.equals(that.life) &&
-                magicEnergy.equals(that.magicEnergy) && spells.equals(that.spells);
+                magicEnergy.equals(that.magicEnergy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, location, life, magicEnergy,spells);
+        return Objects.hash(name, location, life, magicEnergy);
     }
 
     @Override
     public String toString() {
         return String.format(
-                "Character{ name= %s, location= $s, life= %d, magicEnergy= %d, spells= %s}",
+                "Character{ name= %s, location= $s, life= %d, magicEnergy= %d}",
                 name,
                 location,
                 life,
-                magicEnergy,
-                spells
+                magicEnergy
         );
 
     }
+
 }

@@ -1,6 +1,7 @@
 package ar.com.ada.online.second.harrypottergametest;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class Wizard extends Character{
     protected Wand wand;
@@ -55,9 +56,10 @@ public class Wizard extends Character{
     }
 
     @Override
-    public void darkOrFree() {
+    public void setSpells(Set<Spell> spells) {
 
     }
+
     //hashCode equals and toString
 
     @Override

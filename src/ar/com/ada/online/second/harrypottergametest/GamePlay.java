@@ -160,19 +160,29 @@ public class GamePlay {
 
     public void loadSpellCharacters() {
         System.out.println("\n\tJugador 1... Escoge 6 hechizos: \n");
-        chooseSpells(playerOne);
-        System.out.println(playerOne.getSpells());
+        loadSpellByCharacters(playerOne);
         System.out.println("\n\tJugador 2... Escoge 6 hechizos: \n");
-        chooseSpells(playerTwo);
-        System.out.println(playerTwo.getSpells());
+        loadSpellByCharacters(playerTwo);
+    }
+
+    public void loadSpellByCharacters(Character character) {
+        chooseSpells(character);
+        if (character.darkOrFree()) {
+            if (character instanceof Elf) {
+                System.out.println("Eres un Elfo Libre porque elegiste mas de tres hechizos de ataque! Esto añade X ptos en tus hechizos.");
+            } else {
+                System.out.println("Eres un Mago Oscuro porque elegiste mas de tres hechizos de ataque! Esto añade X ptos en tus hechizos.");
+            }
+        }
     }
 
     public void chooseSpells(Character character) {
         Set<Spell> spells = new HashSet<>();
-//        Si no se inivializaba la variable aux me marcaba error
-        boolean aux = false;
+        boolean aux;
+        spallFor:
         for (int i = 0; i < 6; i++) {
             do {
+                aux = false;
                 System.out.println("Por favor ingrese una categoria de hechizos: \n");
                 System.out.println("\t1)Hechizos de Ataque\n");
                 System.out.println("\t2)Hechizos de Sanacion\n");
@@ -181,27 +191,27 @@ public class GamePlay {
 
                 switch (option) {
                     case 1:
-                        Spell attackSpell = getAttackSpells(keyboard);
+                        AttackSpell attackSpell = getAttackSpells(keyboard);
                         spells.add(attackSpell);
-                        /*if (spells != null)
-                            attackSpell.addAttackSpell();*/
                         break;
                     case 2:
-                        Spell healingSpell = getHealingSpells(keyboard);
+                        HealingSpell healingSpell = getHealingSpells(keyboard);
                         spells.add(healingSpell);
                         break;
                     case 3:
-                        Spell recoverySpell = getRecoverySpells(keyboard);
+                        RecoverySpell recoverySpell = getRecoverySpells(keyboard);
                         spells.add(recoverySpell);
                         break;
                     default:
                         aux = true;
                         System.out.println("Opcion incorrecta.");
                 }
-                /*System.out.println("Desea agregar otro Hechizo?: \n\t1) Si\n\t2)No");
-                continueMenu = keyboard.nextInt();*/
 
             } while (aux);
+
+            System.out.println("Desea agregar otro Hechizo?: \n\t1) Si\n\t2) No");
+            int toBeContinue = keyboard.nextInt();
+            if (toBeContinue == 2) break spallFor;
         }
         character.setSpells(spells);
     }
@@ -379,10 +389,13 @@ public class GamePlay {
     }
 
     public void showWinner() {
-        //Muestra por pantalla el nombre del jugador que ganó y el estado de los personajes de la
-        // partida (ambos personajes).
+        //Muestra por pantalla el nombre del jugador que ganó
     }
 
+    public void showStatus() {
+        //Metodo para mostrar el estado de los personajes de la partida (ambos personajes).
+        // Vida, hechizos restantes, energia magica
+    }
 
 }
 
