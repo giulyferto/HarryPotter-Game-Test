@@ -69,8 +69,8 @@ public class GamePlay {
         }
         Wand wand = selectionOfWand();
         wizard.setWand(wand);
-        wizard.getLocation();
-        wizard.setLocation(getLocation());
+        /*wizard.getLocation();
+        wizard.setLocation(getLocation());*/
         return wizard;
     }
 
@@ -105,15 +105,23 @@ public class GamePlay {
                 System.out.println("Debe elegir una opcion valida");
                 elf = null;
         }
-        elf.getLocation();
-        elf.setLocation(getLocation());
+        /*elf.getLocation();
+        elf.setLocation(getLocation());*/
         return elf;
     }
 
     private char getLocation() {
-        System.out.println("Seleccione su ubicacion: ");
-        System.out.println("A B C");
-        char location = keyboard.next().charAt(0);
+        char location;
+        do {
+            System.out.println("Seleccione su ubicacion: ");
+            System.out.println("A B C");
+            location = keyboard.next().charAt(0);
+            if (location == 'A' || location == 'B' || location == 'C') {
+                System.out.println("Usted eligio la locacion " + location);
+            } else {
+                System.out.println("Opcion incorrecta");
+            }
+        } while (location != 'A' || location != 'B' || location != 'C');
         return location;
     }
 
@@ -160,8 +168,10 @@ public class GamePlay {
 
     public void loadSpellCharacters() {
         System.out.println("\n\tJugador 1... Escoge 6 hechizos: \n");
+        System.out.println("(No puedes repetir el mismo hechizo)");
         loadSpellByCharacters(playerOne);
         System.out.println("\n\tJugador 2... Escoge 6 hechizos: \n");
+        System.out.println("(No puedes repetir el mismo hechizo)");
         loadSpellByCharacters(playerTwo);
     }
 
@@ -169,9 +179,15 @@ public class GamePlay {
         chooseSpells(character);
         if (character.darkOrFree()) {
             if (character instanceof Elf) {
-                System.out.println("Eres un Elfo Libre porque elegiste mas de tres hechizos de ataque! Esto añade X ptos en tus hechizos.");
-            } else {
-                System.out.println("Eres un Mago Oscuro porque elegiste mas de tres hechizos de ataque! Esto añade X ptos en tus hechizos.");
+                System.out.println("Eres un Elfo Libre porque elegiste mas de tres hechizos de ataque! \n");
+                System.out.println("Al usar un hechizo de cualquier tipo, este incrementa 5 puntos sobre lo que aporta el hechizo.");
+            } else if (character instanceof Wizard){
+                System.out.println("Eres un Mago Oscuro porque elegiste mas de tres hechizos de ataque! \n");
+                System.out.println(" \n Se te incrementara 10 puntos sobre lo que aporta el hechizo de ataque, pero disminuye 10 puntos en los hechizos de defensa.\n");
+            }
+        }else {
+            if (character instanceof Wizard){
+                System.out.println("Para los magos blancos (no oscuros), al usar un hechizo de recuperación, este incrementa 10 puntos sobre lo que aporta el hechizo, solo si su nivel de vida es menor o igual a 35 puntos.\n");
             }
         }
     }
@@ -179,7 +195,7 @@ public class GamePlay {
     public void chooseSpells(Character character) {
         Set<Spell> spells = new HashSet<>();
         boolean aux;
-        spallFor:
+        spellFor:
         for (int i = 0; i < 6; i++) {
             do {
                 aux = false;
@@ -211,7 +227,7 @@ public class GamePlay {
 
             System.out.println("Desea agregar otro Hechizo?: \n\t1) Si\n\t2) No");
             int toBeContinue = keyboard.nextInt();
-            if (toBeContinue == 2) break spallFor;
+            if (toBeContinue == 2) break spellFor;
         }
         character.setSpells(spells);
     }
@@ -372,7 +388,23 @@ public class GamePlay {
         return spells;
     }
 
-    public void gameStarting() {
+    public void turn(Character playerInTurn , Character opponent) { //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
+        System.out.println("Jugador 1: "); //Al jugador de turno se le pregunta que quiere hacer yq ue hechizo quiere usar, si es de ataque, defensa o bla blas. Depende de lo que se elija de su lista de hechizos se ejecuta playerInTurn.(Mostrar hechizos)
+        gameStarting(playerOne); //Llama a la ejecucion de lo que va a pasar cada turno
+        gameStarting(playerTwo);
+    }
+
+    public void gameStarting(Character character) {
+        showStatus(character);
+
+        System.out.println("Esta es su lista de hechizos: ");
+        character.getSpellSet();
+        spellCasting();
+        //Se ejecuta el metodo que pide la locacion y se lo setea luego
+        getLocation();
+        character.setLocation(getLocation());
+
+
         // Es un ciclo que durará hasta que uno de los jugadores muera y se realizará por turnos (magicEnergy = 0)
         // En cada turno, el jugador debe ver el estado de su personaje (
         // hacer la elección del hechizo que desea realizar (spellCasting())
@@ -381,7 +413,8 @@ public class GamePlay {
         //mago oscuro o elfo libre (determinar por selección de hechizoz: cruciatus, avadakedavra e imperio JUNTOS).
     }
 
-    public void spellCasting() {
+    public void spellCasting() { //Como elige un hechizo si la lista no estas ordenada
+        System.out.println("");
         //hacer la elección del hechizo que desea realizar
         //seleccionar ubicación donde se arrojara el hechizo
         //setear los atributos del jugador que afecta ese hechizo usado
@@ -392,7 +425,14 @@ public class GamePlay {
         //Muestra por pantalla el nombre del jugador que ganó
     }
 
-    public void showStatus() {
+    public void showStatus(Character character) {
+        if (character.getLife() > 0) {
+            System.out.println("Personaje: \t" + character.getName() + "\n");
+            System.out.println("Vida: \t" + character.getLife() + "\n");
+            System.out.println("Energia magica: \t" + "\n");
+        } else {
+            showWinner();
+        }
         //Metodo para mostrar el estado de los personajes de la partida (ambos personajes).
         // Vida, hechizos restantes, energia magica
     }

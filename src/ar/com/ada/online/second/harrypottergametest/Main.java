@@ -11,6 +11,7 @@ public class Main {
         //Se ejecuta el metodo una vez
         player.ChoosePlayer();
         player.loadSpellCharacters();
+       // player.turn();
 
 
     }

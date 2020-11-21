@@ -79,7 +79,6 @@ public abstract class Character {
                 counter++;
             }
         }
-
         return counter > 3;
     }
     public abstract void setSpells(Set<Spell> spells);
@@ -103,11 +102,12 @@ public abstract class Character {
     @Override
     public String toString() {
         return String.format(
-                "Character{ name= %s, location= $s, life= %d, magicEnergy= %d}",
+                "Character{ name= %s, location= $c, life= %d, magicEnergy= %d, spells = %s}",
                 name,
                 location,
                 life,
-                magicEnergy
+                magicEnergy,
+                spells
         );
 
     }

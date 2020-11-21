@@ -78,7 +78,7 @@ public class Wizard extends Character{
     @Override
     public String toString() {
         return String.format(
-                "Wizard{ name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d, wand= %s}",
+                "Wizard{ name= %s, location= $c, life= %d, magicEnergy= %d, spells= %s, wand= %s}",
                 name,
                 location,
                 life,

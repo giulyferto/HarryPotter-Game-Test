@@ -66,7 +66,7 @@ public class Elf extends Character {
     @Override
     public String toString() {
         return String.format(
-                "Elf { name= %s, location= $s, life= %d, magicEnergy= %d, spells= %d}",
+                "Elf { name= %s, location= $c, life= %d, magicEnergy= %d, spells= %s}",
                 name,
                 location,
                 life,
