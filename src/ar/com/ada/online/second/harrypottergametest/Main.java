@@ -7,11 +7,14 @@ public class Main {
     public static void main(String[] args) {
         Scanner keyboard = new Scanner(System.in);
 
-        GamePlay player = new GamePlay();
+        GamePlay gamePlay = new GamePlay();
         //Se ejecuta el metodo una vez
-        player.ChoosePlayer();
-        player.loadSpellCharacters();
-       // player.turn();
+        gamePlay.choosePlayer();
+        gamePlay.loadSpellCharacters();
+        gamePlay.goToFight();
+        gamePlay.showWinner();
+       // gamePlay.turn();
+
 
 
     }

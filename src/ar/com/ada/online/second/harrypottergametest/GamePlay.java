@@ -8,7 +8,7 @@ public class GamePlay {
     Scanner keyboard = new Scanner(System.in);
 
 
-    public void ChoosePlayer() {
+    public void choosePlayer() {
         System.out.println("Seleccione al jugador uno: ");
         playerOne = chooseCharacter();
         System.out.println("\n");
@@ -69,8 +69,8 @@ public class GamePlay {
         }
         Wand wand = selectionOfWand();
         wizard.setWand(wand);
-        /*wizard.getLocation();
-        wizard.setLocation(getLocation());*/
+        wizard.getLocation();
+        wizard.setLocation(getLocation());
         return wizard;
     }
 
@@ -105,8 +105,8 @@ public class GamePlay {
                 System.out.println("Debe elegir una opcion valida");
                 elf = null;
         }
-        /*elf.getLocation();
-        elf.setLocation(getLocation());*/
+        elf.getLocation();
+        elf.setLocation(getLocation());
         return elf;
     }
 
@@ -177,16 +177,16 @@ public class GamePlay {
 
     public void loadSpellByCharacters(Character character) {
         chooseSpells(character);
-        if (character.darkOrFree()) {
+        if (character.isDarkOrFree()) {
             if (character instanceof Elf) {
                 System.out.println("Eres un Elfo Libre porque elegiste mas de tres hechizos de ataque! \n");
                 System.out.println("Al usar un hechizo de cualquier tipo, este incrementa 5 puntos sobre lo que aporta el hechizo.");
-            } else if (character instanceof Wizard){
+            } else if (character instanceof Wizard) {
                 System.out.println("Eres un Mago Oscuro porque elegiste mas de tres hechizos de ataque! \n");
                 System.out.println(" \n Se te incrementara 10 puntos sobre lo que aporta el hechizo de ataque, pero disminuye 10 puntos en los hechizos de defensa.\n");
             }
-        }else {
-            if (character instanceof Wizard){
+        } else {
+            if (character instanceof Wizard) {
                 System.out.println("Para los magos blancos (no oscuros), al usar un hechizo de recuperación, este incrementa 10 puntos sobre lo que aporta el hechizo, solo si su nivel de vida es menor o igual a 35 puntos.\n");
             }
         }
@@ -388,54 +388,172 @@ public class GamePlay {
         return spells;
     }
 
-    public void turn(Character playerInTurn , Character opponent) { //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
-        System.out.println("Jugador 1: "); //Al jugador de turno se le pregunta que quiere hacer yq ue hechizo quiere usar, si es de ataque, defensa o bla blas. Depende de lo que se elija de su lista de hechizos se ejecuta playerInTurn.(Mostrar hechizos)
-        gameStarting(playerOne); //Llama a la ejecucion de lo que va a pasar cada turno
-        gameStarting(playerTwo);
+    public void goToFight() {
+        do {
+            System.out.println("Turno del juagdor 1");
+            turn(playerOne, playerTwo);
+            if (playerTwo.isAlive()) break;
+
+            System.out.println("Turno del juagdor 2");
+            turn(playerTwo, playerOne);
+            // if (playerOne.isAlive()) break;
+        } while (playerOne.isAlive() && playerTwo.isAlive()); // o (true)
     }
 
-    public void gameStarting(Character character) {
-        showStatus(character);
+    public void turn(Character playerInTurn, Character opponent) {
+        // playerInTurn que accion quiere hacer (atacar, curarse o defenderse) getActionsPlayer() string o int
+        // attackOpponent(Character playerInTurn, Character opponent)
+        //  de la lista de hechizo de playerInTurn, se le pregunta cual quiere usar, una vez que elija uno de esa lista, se procese a calcular el numero de daño que debe causar
+        //  ese personaje, se solicita la ubicacion de ataque, con esos datos se invoca el metodo opponent.reciveAttack(damageLevel, location);
+        //  if (this.location.equal(location)) live = live - damageLevel;
+        // healYourself(Character playerInTurn)
+        // defendYourself(Character playerInTurn)
+        //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
+        showStatus(playerInTurn);
 
-        System.out.println("Esta es su lista de hechizos: ");
-        character.getSpellSet();
-        spellCasting();
-        //Se ejecuta el metodo que pide la locacion y se lo setea luego
-        getLocation();
-        character.setLocation(getLocation());
-
-
-        // Es un ciclo que durará hasta que uno de los jugadores muera y se realizará por turnos (magicEnergy = 0)
-        // En cada turno, el jugador debe ver el estado de su personaje (
-        // hacer la elección del hechizo que desea realizar (spellCasting())
-        // y todo lo que conlleva este hechizo. Luego de cada turno, se debe validar si
-        //  el oponente ya está muerto, en caso afirmativo, se debe terminar el ciclo y por ende el proceso
-        //mago oscuro o elfo libre (determinar por selección de hechizoz: cruciatus, avadakedavra e imperio JUNTOS).
+       /* getLocation();
+        playerInTurn.setLocation(getLocation());*/
+        getPlayersActions(playerInTurn, opponent);
     }
 
-    public void spellCasting() { //Como elige un hechizo si la lista no estas ordenada
-        System.out.println("");
-        //hacer la elección del hechizo que desea realizar
-        //seleccionar ubicación donde se arrojara el hechizo
-        //setear los atributos del jugador que afecta ese hechizo usado
-        //setear atributos del otro jugador si esta en la posición en la que se lanzo el hechizo
+    public Integer getPlayersActions(Character playerInTurn, Character opponent) {
+        boolean aux;
+        do {
+            aux = false;
+            System.out.println("Que accion desea realizar?: \n");
+            System.out.println("\t1)Atacar\n");
+            System.out.println("\t2)Sanarse\n");
+            System.out.println("\t3)Recuperarse\n");
+            int option = keyboard.nextInt();
+
+            switch (option) {
+                case 1:
+                    attackOpponent(playerInTurn, opponent);
+                    break;
+                case 2:
+                    healYourself(playerInTurn);
+
+                    break;
+                case 3:
+                    recoverYourself(playerInTurn);
+
+                    break;
+                default:
+                    aux = true;
+                    System.out.println("Opcion incorrecta.");
+            }
+
+        } while (aux);
+        return null;
+    }
+
+    private void attackOpponent(Character playerInTurn, Character opponent) {
+        List<Spell> attackSpells = new ArrayList<>();
+        Set<Spell> spells = playerInTurn.getSpellSet();
+        int counter = 0;
+        for (Spell spell : spells) {
+            if (spell instanceof AttackSpell) {
+                attackSpells.add(spell);
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("No tiene  hechizos de Ataque\n");
+        } else {
+
+            System.out.println("Elija un hechizo: ");
+            for (int i = 0; i < attackSpells.size(); i++) {
+                System.out.println((i + 1) + ") " + attackSpells.get(i).getName());
+            }
+
+            int option = keyboard.nextInt();
+            if (option <= attackSpells.size() + 1) {
+                Spell spell = attackSpells.get(option - 1);
+            }
+
+            //preguntar a donde se quiere mandar el hechizo
+
+            if (playerInTurn.isDarkOrFree()) {
+
+                opponent.receiveAttack(100, opponent.getLocation());
+            } else {
+
+            }
+
+        }
+    }
+
+    private void healYourself(Character playerInTurn) {
+        List<Spell> healingSpells = new ArrayList<>();
+        Set<Spell> spells = playerInTurn.getSpellSet();
+        int counter = 0;
+        for (Spell spell : spells) {
+            if (spell instanceof HealingSpell) {
+                healingSpells.add(spell);
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("No tiene  hechizos de sanacion\n");
+        } else {
+
+            System.out.println("Elija un hechizo: ");
+            for (int i = 0; i < healingSpells.size(); i++) {
+                System.out.println((i + 1) + ") " + healingSpells.get(i).getName());
+            }
+
+            int option = keyboard.nextInt();
+            playerInTurn.attack(healingSpells.get(option - 1));
+            /*switch (option - 1) {
+                case 1:
+                    //switch
+                    Spell attackSpell = healingSpells.get(option - 1);
+                    break;
+            }*/
+        }
+    }
+
+    private void recoverYourself(Character playerInTurn) {
+        List<Spell> recoverySpells = new ArrayList<>();
+        Set<Spell> spells = playerInTurn.getSpellSet();
+        int counter = 0;
+        for (Spell spell : spells) {
+            if (spell instanceof HealingSpell) {
+                recoverySpells.add(spell);
+                counter++;
+            }
+        }
+        if (counter == 0) {
+            System.out.println("No tiene  hechizos de Recuperacion\n");
+        } else {
+
+            System.out.println("Elija un hechizo: ");
+            for (int i = 0; i < recoverySpells.size(); i++) {
+                System.out.println((i + 1) + ") " + recoverySpells.get(i).getName());
+            }
+
+            int option = keyboard.nextInt();
+            playerInTurn.attack(recoverySpells.get(option - 1));
+            /*switch (option - 1) {
+                case 1:
+                    //switch
+                    Spell attackSpell = recoverySpells.get(option - 1);
+                    break;
+            }*/
+        }
+    }
+
+
+    public void showStatus(Character character) {
+        System.out.println("Personaje: \t" + character.getName() + "\n");
+        System.out.println("Vida: \t" + character.getLife() + "\n");
+        System.out.println("Energia magica: \t" + "\n");
     }
 
     public void showWinner() {
         //Muestra por pantalla el nombre del jugador que ganó
     }
-
-    public void showStatus(Character character) {
-        if (character.getLife() > 0) {
-            System.out.println("Personaje: \t" + character.getName() + "\n");
-            System.out.println("Vida: \t" + character.getLife() + "\n");
-            System.out.println("Energia magica: \t" + "\n");
-        } else {
-            showWinner();
-        }
-        //Metodo para mostrar el estado de los personajes de la partida (ambos personajes).
-        // Vida, hechizos restantes, energia magica
-    }
+}
 
 }
 

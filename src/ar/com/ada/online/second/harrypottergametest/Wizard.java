@@ -21,7 +21,7 @@ public class Wizard extends Character{
 
     //Se implementan metodos de la clase
     @Override
-    public void attack() {
+    public void attack(Spell spell) {
 
     }
 
@@ -36,12 +36,7 @@ public class Wizard extends Character{
     }
 
     @Override
-    public void receiveAttack() {
-
-    }
-
-    @Override
-    public void isAlive() {
+    public void receiveAttack(Integer life, char location) {
 
     }
 

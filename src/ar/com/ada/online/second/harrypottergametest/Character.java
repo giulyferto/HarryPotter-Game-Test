@@ -58,21 +58,23 @@ public abstract class Character {
     }
 
     //metodos abstractos
-    public abstract void attack();
+    public abstract void attack(Spell spell);
 
     public abstract void heal();
 
     public abstract void recovery();
 
-    public abstract void receiveAttack();
+    public abstract void receiveAttack(Integer damage, char location );
 
-    public abstract void isAlive();
+    public Boolean isAlive() {
+        return  this.life > 0;
+    };
 
     public abstract void addSpell();
 
     public abstract void characterStatus();
 
-    public boolean darkOrFree() {
+    public boolean isDarkOrFree() {
         int counter = 0;
         for (Spell spell : spellSet) {
             if (spell instanceof AttackSpell) {
