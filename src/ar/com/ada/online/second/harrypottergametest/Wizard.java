@@ -25,28 +25,14 @@ public class Wizard extends Character{
 
     }
 
-    @Override
-    public void heal() {
-
-    }
 
     @Override
-    public void recovery() {
+    public void recoverYourself(Integer magicPower) {
 
     }
 
     @Override
     public void receiveAttack(Integer life, char location) {
-
-    }
-
-    @Override
-    public void addSpell() {
-
-    }
-
-    @Override
-    public void characterStatus() {
 
     }
 

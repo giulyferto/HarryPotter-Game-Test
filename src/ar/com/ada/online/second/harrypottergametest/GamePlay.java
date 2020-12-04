@@ -110,18 +110,18 @@ public class GamePlay {
         return elf;
     }
 
-    private char getLocation() {
+    private char getLocation() { //Comente el do - while porque se metia en un loop eterno. CHECK
         char location;
-        do {
-            System.out.println("Seleccione su ubicacion: ");
-            System.out.println("A B C");
-            location = keyboard.next().charAt(0);
-            if (location == 'A' || location == 'B' || location == 'C') {
-                System.out.println("Usted eligio la locacion " + location);
-            } else {
-                System.out.println("Opcion incorrecta");
-            }
-        } while (location != 'A' || location != 'B' || location != 'C');
+        //do { 
+        System.out.println("Seleccione su ubicacion: ");
+        System.out.println("A B C");
+        location = keyboard.next().charAt(0);
+        if (location == 'A' || location == 'B' || location == 'C') {
+            System.out.println("Usted eligio la locacion " + location);
+        } else {
+            System.out.println("Opcion incorrecta");
+        }
+        //  } while (location != 'A' || location != 'B' || location != 'C');
         return location;
     }
 
@@ -135,34 +135,34 @@ public class GamePlay {
         switch (option) {
             case 1:
                 wand.setName("Varita de Sauco");
-                wand.setPower(60);
+                wand.setPower(5);
                 break;
             case 2:
                 wand.setName("Varita de Pluma de fénix");
-                wand.setPower(50);
+                wand.setPower(4);
                 break;
             case 3:
                 wand.setName("Varita de Fresno");
-                wand.setPower(40);
+                wand.setPower(3);
                 break;
             case 4:
                 wand.setName("Varita de Madera de serpiente");
-                wand.setPower(30);
+                wand.setPower(2);
                 break;
             case 5:
                 wand.setName("Varita de Abedul");
-                wand.setPower(20);
+                wand.setPower(1);
                 break;
             case 6:
                 wand.setName("Varita de Espino");
-                wand.setPower(10);
+                wand.setPower(4);
                 break;
             default:
                 wand.setName("Varita de Palisandro");
-                wand.setPower(5);
+                wand.setPower(3);
                 break;
         }
-        System.out.println("\t Te ha escogido la " + wand.getName() + " que te añade " + wand.getPower() + " puntos de poder " + "\n");
+        System.out.println("\t Te ha escogido la " + wand.getName() + " que te añade " + wand.getPower() + " puntos de poder  al atacar." + "\n");
         return wand;
     }
 
@@ -411,8 +411,6 @@ public class GamePlay {
         //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
         showStatus(playerInTurn);
 
-       /* getLocation();
-        playerInTurn.setLocation(getLocation());*/
         getPlayersActions(playerInTurn, opponent);
     }
 
@@ -459,6 +457,7 @@ public class GamePlay {
         }
         if (counter == 0) {
             System.out.println("No tiene  hechizos de Ataque\n");
+            getPlayersActions(playerInTurn, opponent);//Estaria bueno que si no hay hechizos de ataque vuelva a este metodo. CHECK.
         } else {
 
             System.out.println("Elija un hechizo: ");
@@ -466,20 +465,29 @@ public class GamePlay {
                 System.out.println((i + 1) + ") " + attackSpells.get(i).getName());
             }
 
+            Spell spell = null; //Lo cree afuera del metodo porque si no era una variable local y no podia usarlo en el metodo recieveAttack
             int option = keyboard.nextInt();
-            if (option <= attackSpells.size() + 1) {
-                Spell spell = attackSpells.get(option - 1);
+            if (option <= attackSpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+                spell = attackSpells.get(option - 1);
             }
 
             //preguntar a donde se quiere mandar el hechizo
+            //Para los magos oscuros, se incrementa 10 puntos sobre lo que aporta el hechizo de ataque, pero
+            //disminuye 10 puntos en los hechizos de defensa.
+            //Para los magos blancos (no oscuros), al usar un hechizo de recuperación, este incrementa 10
+            //puntos sobre lo que aporta el hechizo, solo si su nivel de vida es menor o igual a 35 puntos.
+//            Para los elfos libres, al usar un hechizo de cualquier tipo, este incrementa 5 puntos sobre lo que
+//            aporta el hechizo.
+//● Para los elfos en cautiverio, al usar un hechizo de defensa, este incrementa 10 puntos sobre lo que
+//            aporta el hechizo
+            //Recordar que las VARITAS añaden un maximo de 5 ptos en el ataque a los MAGOS
+            System.out.println("A que posicion desea realizar el ataque? (A, B, C) ");
+            char position = keyboard.next().charAt(0);
 
-            if (playerInTurn.isDarkOrFree()) {
+            if (playerInTurn.isDarkOrFree()) { //Por que comprueba en este punto si es dark or free si luego deberia modificarse el ataque particular de cada clase dependiendo de si es dark or free
 
-                opponent.receiveAttack(100, opponent.getLocation());
-            } else {
-
-            }
-
+                opponent.receiveAttack(spell.getDamage(), position); // TODO: Completar metodo recieve attack en Character, Wizard y Elf
+            } else {}
         }
     }
 
@@ -493,6 +501,7 @@ public class GamePlay {
                 counter++;
             }
         }
+
         if (counter == 0) {
             System.out.println("No tiene  hechizos de sanacion\n");
         } else {
@@ -502,14 +511,14 @@ public class GamePlay {
                 System.out.println((i + 1) + ") " + healingSpells.get(i).getName());
             }
 
+            //Recordar que los puntos de vida no pueden superar los 100 puntos
+            Spell spell = null;
             int option = keyboard.nextInt();
-            playerInTurn.attack(healingSpells.get(option - 1));
-            /*switch (option - 1) {
-                case 1:
-                    //switch
-                    Spell attackSpell = healingSpells.get(option - 1);
-                    break;
-            }*/
+            if (option <= healingSpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+                spell = healingSpells.get(option - 1);
+            }
+
+            playerInTurn.healYourself(spell.getRecovery()); //TODO: Checkear metodo healYourself
         }
     }
 
@@ -531,15 +540,13 @@ public class GamePlay {
             for (int i = 0; i < recoverySpells.size(); i++) {
                 System.out.println((i + 1) + ") " + recoverySpells.get(i).getName());
             }
-
+            //Recordar que los puntos de energia magica no pueden superar los 100 puntos
+            Spell spell = null;
             int option = keyboard.nextInt();
-            playerInTurn.attack(recoverySpells.get(option - 1));
-            /*switch (option - 1) {
-                case 1:
-                    //switch
-                    Spell attackSpell = recoverySpells.get(option - 1);
-                    break;
-            }*/
+            if (option <= recoverySpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+                spell = recoverySpells.get(option - 1);
+            }
+            playerInTurn.recoverYourself(spell.getMagicPower()); //TODO: Hacer metodo Recovery con sus caracteristicas correspondientes
         }
     }
 
@@ -555,7 +562,7 @@ public class GamePlay {
     }
 }
 
-}
+
 
 
 

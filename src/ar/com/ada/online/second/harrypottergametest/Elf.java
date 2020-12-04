@@ -15,13 +15,9 @@ public class Elf extends Character {
 
     }
 
-    @Override
-    public void heal() {
-
-    }
 
     @Override
-    public void recovery() {
+    public void recoverYourself(Integer magicPower) {
 
     }
 
@@ -30,15 +26,6 @@ public class Elf extends Character {
 
     }
 
-    @Override
-    public void addSpell() {
-
-    }
-
-    @Override
-    public void characterStatus() {
-
-    }
 
     @Override
     public void setSpells(Set<Spell> spells) {

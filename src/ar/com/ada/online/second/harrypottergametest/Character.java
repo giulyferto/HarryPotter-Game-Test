@@ -58,21 +58,22 @@ public abstract class Character {
     }
 
     //metodos abstractos
+    //BORRE UN PAR DE METODOS QUE ME PARECE QUE NO VAMOS A USAR
     public abstract void attack(Spell spell);
 
-    public abstract void heal();
+    public Integer healYourself(Integer recovery) {
+        setLife(life+=recovery);
+        return life; //No se si retorna o no
+    };
 
-    public abstract void recovery();
+    public abstract void recoverYourself(Integer magicPower);
 
-    public abstract void receiveAttack(Integer damage, char location );
+    public abstract void receiveAttack(Integer damage, char location);
 
     public Boolean isAlive() {
         return  this.life > 0;
     };
 
-    public abstract void addSpell();
-
-    public abstract void characterStatus();
 
     public boolean isDarkOrFree() {
         int counter = 0;
