@@ -397,7 +397,7 @@ public class GamePlay {
             System.out.println("Turno del juagdor 2");
             turn(playerTwo, playerOne);
             // if (playerOne.isAlive()) break;
-        } while (playerOne.isAlive() && playerTwo.isAlive()); // o (true)
+        } while (playerOne.isAlive()); // o (true)
     }
 
     public void turn(Character playerInTurn, Character opponent) {
@@ -410,7 +410,6 @@ public class GamePlay {
         // defendYourself(Character playerInTurn)
         //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
         showStatus(playerInTurn);
-
         getPlayersActions(playerInTurn, opponent);
     }
 
@@ -442,7 +441,9 @@ public class GamePlay {
             }
 
         } while (aux);
-        return null;
+        getLocation();
+        playerInTurn.setLocation(getLocation());
+        return null; //Por que retorna null?
     }
 
     private void attackOpponent(Character playerInTurn, Character opponent) {
@@ -465,30 +466,29 @@ public class GamePlay {
                 System.out.println((i + 1) + ") " + attackSpells.get(i).getName());
             }
 
-            Spell spell = null; //Lo cree afuera del metodo porque si no era una variable local y no podia usarlo en el metodo recieveAttack
+            Spell spell = null;
             int option = keyboard.nextInt();
-            if (option <= attackSpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+            if (option <= attackSpells.size() + 1) {
                 spell = attackSpells.get(option - 1);
             }
 
-            //preguntar a donde se quiere mandar el hechizo
-            //Para los magos oscuros, se incrementa 10 puntos sobre lo que aporta el hechizo de ataque, pero
-            //disminuye 10 puntos en los hechizos de defensa.
-            //Para los magos blancos (no oscuros), al usar un hechizo de recuperación, este incrementa 10
-            //puntos sobre lo que aporta el hechizo, solo si su nivel de vida es menor o igual a 35 puntos.
-//            Para los elfos libres, al usar un hechizo de cualquier tipo, este incrementa 5 puntos sobre lo que
-//            aporta el hechizo.
-//● Para los elfos en cautiverio, al usar un hechizo de defensa, este incrementa 10 puntos sobre lo que
-//            aporta el hechizo
-            //Recordar que las VARITAS añaden un maximo de 5 ptos en el ataque a los MAGOS
             System.out.println("A que posicion desea realizar el ataque? (A, B, C) ");
             char position = keyboard.next().charAt(0);
 
-            if (playerInTurn.isDarkOrFree()) { //Por que comprueba en este punto si es dark or free si luego deberia modificarse el ataque particular de cada clase dependiendo de si es dark or free
-
-                opponent.receiveAttack(spell.getDamage(), position); // TODO: Completar metodo recieve attack en Character, Wizard y Elf
-            } else {}
+            if (playerInTurn.isDarkOrFree()) {
+                if (playerInTurn instanceof Wizard) {
+                    Wand wand = ((Wizard) playerInTurn).getWand();
+                    System.out.println("Se te sumaran 10 puntos a tu ataque por ser un Mago Oscuro, mas " + wand.getPower() + " puntos por tu varita " + wand.getName() + "\n");
+                    opponent.receiveAttack(spell.getDamage() + 10 + wand.getPower(), position);
+                } else { //Por si es un elfo
+                    System.out.println("Se te suman 5 puntos a tu ataque por ser un Elfo libre!");
+                    opponent.receiveAttack(spell.getDamage() + 5, position);
+                }
+            } else {
+                opponent.receiveAttack(spell.getDamage(), position);
+            }
         }
+        //TODO: Estaria bueno avisarle al que dispara el hechizo si le dio o no al oponente
     }
 
     private void healYourself(Character playerInTurn) {
@@ -514,11 +514,17 @@ public class GamePlay {
             //Recordar que los puntos de vida no pueden superar los 100 puntos
             Spell spell = null;
             int option = keyboard.nextInt();
-            if (option <= healingSpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+            if (option <= healingSpells.size() + 1) {
                 spell = healingSpells.get(option - 1);
             }
-
-            playerInTurn.healYourself(spell.getRecovery()); //TODO: Checkear metodo healYourself
+            if (playerInTurn.isDarkOrFree()) {
+                if (playerInTurn instanceof Elf) {
+                    System.out.println("Se te añaden 5 puntos a este hechizo por ser un Elfo Libre");
+                    playerInTurn.healYourself(spell.getMagicPower() + 5);
+                }
+            } else {
+                playerInTurn.healYourself(spell.getMagicPower() + 5);
+            }
         }
     }
 
@@ -543,10 +549,32 @@ public class GamePlay {
             //Recordar que los puntos de energia magica no pueden superar los 100 puntos
             Spell spell = null;
             int option = keyboard.nextInt();
-            if (option <= recoverySpells.size() + 1) { //No entiendo por que la opcion es menor o igual. Por que no alcanza solo con que sea igual? Si la opcion es igual a lo que vale attack spells en la posicion i + 1, no deberia de funcionar? 
+            if (option <= recoverySpells.size() + 1) {
                 spell = recoverySpells.get(option - 1);
             }
-            playerInTurn.recoverYourself(spell.getMagicPower()); //TODO: Hacer metodo Recovery con sus caracteristicas correspondientes
+            //TODO: Los hechizos tiene un nivel de energía mágica requerida, esta es tomada de la energía mágica del
+            //personaje. Al momento de usar un hechizo, si el personaje no tiene el nivel de energía mágica
+            //requerido para el hechizo seleccionado, el juego debe indicar que no posee energía mágica
+            //suficiente y se incrementará 10 puntos de energía mágica al personaje y terminará el turno del
+            //jugador.
+            if (playerInTurn.isDarkOrFree()) {
+                if (playerInTurn instanceof Wizard) {
+                    System.out.println("Se te restaran 10 puntos en este hechizo por ser un Mago Oscuro");
+                    playerInTurn.recoverYourself(spell.getRecovery() - 10);
+                } else {//Si es Elfo Libre
+                    playerInTurn.recoverYourself(spell.getRecovery() + 5);
+                }
+            } else if (playerInTurn instanceof Wizard) {
+                if (playerInTurn.getLife() <= 35) {
+                    System.out.println("Tu nivel de vida es menor o igual a 35 pts, se sumaran 10 pts al hechizo que seleccionaste. ");
+                    playerInTurn.recoverYourself(spell.getRecovery() + 10);
+                } else {
+                    playerInTurn.recoverYourself(spell.getRecovery());
+                }
+            } else { //Si es elfo en cautiverio
+                System.out.println("Se te incrementaran 10 ptos en este hechizo");
+                playerInTurn.recoverYourself(spell.getRecovery() + 10);
+            }
         }
     }
 
@@ -559,7 +587,10 @@ public class GamePlay {
 
     public void showWinner() {
         //Muestra por pantalla el nombre del jugador que ganó
+        Character winner = playerOne.isAlive() ? playerOne : playerTwo;
+        System.out.println("El ganador es " + winner);
     }
+
 }
 
 

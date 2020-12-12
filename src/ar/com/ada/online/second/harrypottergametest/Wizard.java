@@ -3,7 +3,7 @@ package ar.com.ada.online.second.harrypottergametest;
 import java.util.Objects;
 import java.util.Set;
 
-public class Wizard extends Character{
+public class Wizard extends Character {
     protected Wand wand;
 
 
@@ -32,9 +32,7 @@ public class Wizard extends Character{
     }
 
     @Override
-    public void receiveAttack(Integer life, char location) {
-
-    }
+    public void receiveAttack(Integer damage, char position){}
 
     @Override
     public void setSpells(Set<Spell> spells) {

@@ -57,8 +57,7 @@ public abstract class Character {
         this.spellSet = spellSet;
     }
 
-    //metodos abstractos
-    //BORRE UN PAR DE METODOS QUE ME PARECE QUE NO VAMOS A USAR
+
     public abstract void attack(Spell spell);
 
     public Integer healYourself(Integer recovery) {
@@ -68,7 +67,18 @@ public abstract class Character {
 
     public abstract void recoverYourself(Integer magicPower);
 
-    public abstract void receiveAttack(Integer damage, char location);
+    public void receiveAttack(Integer damage, char position){
+        if (position == location) {
+            life-=damage;
+            if (life <0){
+                System.out.println("Tu oponente te ha dado y ha acabado con tu vida");
+            } else {
+                System.out.println("Tu oponente te ha dado! Tu nivel de vida ahora es de "+ life);
+            }
+        } else {
+            System.out.println("Tu oponente ha disparado un hechizo pero no te ha alcanzado!!");
+        }
+    }
 
     public Boolean isAlive() {
         return  this.life > 0;

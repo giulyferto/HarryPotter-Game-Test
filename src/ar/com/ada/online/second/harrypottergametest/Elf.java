@@ -22,7 +22,7 @@ public class Elf extends Character {
     }
 
     @Override
-    public void receiveAttack(Integer life, char location) {
+    public void receiveAttack(Integer damage, char position) {
 
     }
 
