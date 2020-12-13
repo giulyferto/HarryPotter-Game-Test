@@ -21,22 +21,15 @@ public class Wizard extends Character {
 
     //Se implementan metodos de la clase
     @Override
-    public void attack(Spell spell) {
-
-    }
-
-
-    @Override
     public void recoverYourself(Integer magicPower) {
-
     }
 
     @Override
-    public void receiveAttack(Integer damage, char position){}
+    public void receiveAttack(Integer damage, Integer magicPower, char position) {
+    }
 
     @Override
     public void setSpells(Set<Spell> spells) {
-
     }
 
     //hashCode equals and toString

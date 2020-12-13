@@ -58,22 +58,25 @@ public abstract class Character {
     }
 
 
-    public abstract void attack(Spell spell);
-
     public Integer healYourself(Integer recovery) {
-        setLife(life+=recovery);
+        setLife(life += recovery);
+        if (life >100){
+            life = 100;
+        }
         return life; //No se si retorna o no
-    };
+    }
 
-    public abstract void recoverYourself(Integer magicPower);
+    public void recoverYourself(Integer magicPower) {
+       magicEnergy -= magicPower;
+    }
 
-    public void receiveAttack(Integer damage, char position){
+    public void receiveAttack(Integer damage, Integer magicPower, char position) {
         if (position == location) {
-            life-=damage;
-            if (life <0){
+            life -= damage;
+            if (life < 0) {
                 System.out.println("Tu oponente te ha dado y ha acabado con tu vida");
             } else {
-                System.out.println("Tu oponente te ha dado! Tu nivel de vida ahora es de "+ life);
+                System.out.println("Tu oponente te ha dado! Tu nivel de vida ahora es de " + life);
             }
         } else {
             System.out.println("Tu oponente ha disparado un hechizo pero no te ha alcanzado!!");
@@ -81,8 +84,8 @@ public abstract class Character {
     }
 
     public Boolean isAlive() {
-        return  this.life > 0;
-    };
+        return this.life > 0;
+    }
 
 
     public boolean isDarkOrFree() {
@@ -94,6 +97,7 @@ public abstract class Character {
         }
         return counter > 3;
     }
+
     public abstract void setSpells(Set<Spell> spells);
 
     @Override

@@ -13,9 +13,6 @@ public class Main {
         gamePlay.loadSpellCharacters();
         gamePlay.goToFight();
         gamePlay.showWinner();
-       // gamePlay.turn();
-
-
 
     }
 }

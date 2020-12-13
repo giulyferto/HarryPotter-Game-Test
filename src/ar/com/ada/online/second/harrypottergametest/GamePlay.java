@@ -354,32 +354,32 @@ public class GamePlay {
         switch (option) {
             case 1:
                 spells.setName("Contorsione");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             case 2:
                 spells.setName("Taenia");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             case 3:
                 spells.setName("Ventriculum");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             case 4:
                 spells.setName("Cortisem detraho");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             case 5:
                 spells.setName("Enervate");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             case 6:
                 spells.setName("Reparifors");
-                spells.setMagicPower(15);
+                spells.setMagicPowerRecoverySpell(15);
                 spells.setMagicPower(8);
                 break;
             default:
@@ -401,14 +401,6 @@ public class GamePlay {
     }
 
     public void turn(Character playerInTurn, Character opponent) {
-        // playerInTurn que accion quiere hacer (atacar, curarse o defenderse) getActionsPlayer() string o int
-        // attackOpponent(Character playerInTurn, Character opponent)
-        //  de la lista de hechizo de playerInTurn, se le pregunta cual quiere usar, una vez que elija uno de esa lista, se procese a calcular el numero de daño que debe causar
-        //  ese personaje, se solicita la ubicacion de ataque, con esos datos se invoca el metodo opponent.reciveAttack(damageLevel, location);
-        //  if (this.location.equal(location)) live = live - damageLevel;
-        // healYourself(Character playerInTurn)
-        // defendYourself(Character playerInTurn)
-        //Se controlan los turnos, una vez elegidos los hechizos y personajes comienza el juego
         showStatus(playerInTurn);
         getPlayersActions(playerInTurn, opponent);
     }
@@ -458,7 +450,7 @@ public class GamePlay {
         }
         if (counter == 0) {
             System.out.println("No tiene  hechizos de Ataque\n");
-            getPlayersActions(playerInTurn, opponent);//Estaria bueno que si no hay hechizos de ataque vuelva a este metodo. CHECK.
+            getPlayersActions(playerInTurn, opponent);//Estaria bueno que si no hay hechizos de ataque vuelva a este metodo. TODO: CHECK.
         } else {
 
             System.out.println("Elija un hechizo: ");
@@ -474,18 +466,31 @@ public class GamePlay {
 
             System.out.println("A que posicion desea realizar el ataque? (A, B, C) ");
             char position = keyboard.next().charAt(0);
-
+            //Esto se hace para restar la energia magica del hechizo con la energia magica del personaje
+            //
+            if (playerInTurn.magicEnergy < spell.getMagicPower()) {
+                if (playerInTurn.magicEnergy < 0) {
+                    playerInTurn.magicEnergy = 0;
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                } else  {
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                }
+            } else {
+                playerInTurn.magicEnergy -= spell.magicPower;
+            }
             if (playerInTurn.isDarkOrFree()) {
                 if (playerInTurn instanceof Wizard) {
                     Wand wand = ((Wizard) playerInTurn).getWand();
                     System.out.println("Se te sumaran 10 puntos a tu ataque por ser un Mago Oscuro, mas " + wand.getPower() + " puntos por tu varita " + wand.getName() + "\n");
-                    opponent.receiveAttack(spell.getDamage() + 10 + wand.getPower(), position);
+                    opponent.receiveAttack(spell.getDamage() + 10 + wand.getPower(), spell.getMagicPower(), position);
                 } else { //Por si es un elfo
                     System.out.println("Se te suman 5 puntos a tu ataque por ser un Elfo libre!");
-                    opponent.receiveAttack(spell.getDamage() + 5, position);
+                    opponent.receiveAttack(spell.getDamage() + 5, spell.getMagicPower(), position);
                 }
             } else {
-                opponent.receiveAttack(spell.getDamage(), position);
+                opponent.receiveAttack(spell.getDamage(), spell.getMagicPower(), position);
             }
         }
         //TODO: Estaria bueno avisarle al que dispara el hechizo si le dio o no al oponente
@@ -517,6 +522,18 @@ public class GamePlay {
             if (option <= healingSpells.size() + 1) {
                 spell = healingSpells.get(option - 1);
             }
+            if (playerInTurn.magicEnergy < spell.getMagicPower()) {
+                if (playerInTurn.magicEnergy < 0) {
+                    playerInTurn.magicEnergy = 0;
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                } else  {
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                }
+            } else {
+                playerInTurn.magicEnergy -= spell.magicPower;
+            }
             if (playerInTurn.isDarkOrFree()) {
                 if (playerInTurn instanceof Elf) {
                     System.out.println("Se te añaden 5 puntos a este hechizo por ser un Elfo Libre");
@@ -547,33 +564,41 @@ public class GamePlay {
                 System.out.println((i + 1) + ") " + recoverySpells.get(i).getName());
             }
             //Recordar que los puntos de energia magica no pueden superar los 100 puntos
-            Spell spell = null;
+            RecoverySpell spell = null;
             int option = keyboard.nextInt();
             if (option <= recoverySpells.size() + 1) {
-                spell = recoverySpells.get(option - 1);
+                spell = (RecoverySpell) recoverySpells.get(option - 1); //SE HIZO UN CASTEO PARA QUE NO ME DE ERROR AL CAMBIAR EL TIPO DE DATO QUE ES SPELL
             }
-            //TODO: Los hechizos tiene un nivel de energía mágica requerida, esta es tomada de la energía mágica del
-            //personaje. Al momento de usar un hechizo, si el personaje no tiene el nivel de energía mágica
-            //requerido para el hechizo seleccionado, el juego debe indicar que no posee energía mágica
-            //suficiente y se incrementará 10 puntos de energía mágica al personaje y terminará el turno del
-            //jugador.
+            if (playerInTurn.magicEnergy < spell.getMagicPower()) {
+                if (playerInTurn.magicEnergy < 0) {
+                    playerInTurn.magicEnergy = 0;
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                } else  {
+                    System.out.println("No tienes nivel de energia magica suficiente para ejecutar este hechizo, se te añadiran 10 ptos de energia magica adicionales por esto");
+                    playerInTurn.magicEnergy = playerInTurn.magicEnergy + 10;
+                }
+            } else {
+                playerInTurn.magicEnergy -= spell.magicPower;
+            }
+
             if (playerInTurn.isDarkOrFree()) {
                 if (playerInTurn instanceof Wizard) {
                     System.out.println("Se te restaran 10 puntos en este hechizo por ser un Mago Oscuro");
-                    playerInTurn.recoverYourself(spell.getRecovery() - 10);
+                    playerInTurn.recoverYourself(spell.getMagicPowerRecoverySpell() - 10);
                 } else {//Si es Elfo Libre
-                    playerInTurn.recoverYourself(spell.getRecovery() + 5);
+                    playerInTurn.recoverYourself(spell.getMagicPowerRecoverySpell() + 5);
                 }
             } else if (playerInTurn instanceof Wizard) {
                 if (playerInTurn.getLife() <= 35) {
                     System.out.println("Tu nivel de vida es menor o igual a 35 pts, se sumaran 10 pts al hechizo que seleccionaste. ");
-                    playerInTurn.recoverYourself(spell.getRecovery() + 10);
+                    playerInTurn.recoverYourself(spell.getMagicPowerRecoverySpell() + 10);
                 } else {
-                    playerInTurn.recoverYourself(spell.getRecovery());
+                    playerInTurn.recoverYourself(spell.getMagicPowerRecoverySpell());
                 }
             } else { //Si es elfo en cautiverio
                 System.out.println("Se te incrementaran 10 ptos en este hechizo");
-                playerInTurn.recoverYourself(spell.getRecovery() + 10);
+                playerInTurn.recoverYourself(spell.getMagicPowerRecoverySpell() + 10);
             }
         }
     }

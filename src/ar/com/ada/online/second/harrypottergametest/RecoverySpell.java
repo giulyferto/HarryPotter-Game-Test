@@ -3,7 +3,16 @@ package ar.com.ada.online.second.harrypottergametest;
 import java.util.Objects;
 
 public class RecoverySpell extends Spell{
+    private Integer magicPowerRecoverySpell;
     public RecoverySpell() {
+    }
+
+    public Integer getMagicPowerRecoverySpell() {
+        return magicPowerRecoverySpell;
+    }
+
+    public void setMagicPowerRecoverySpell(Integer magicPowerRecoverySpell) {
+        this.magicPowerRecoverySpell = magicPowerRecoverySpell;
     }
 
     @Override

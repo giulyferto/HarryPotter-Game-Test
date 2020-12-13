@@ -10,11 +10,6 @@ public class Elf extends Character {
 
 
     //Se implementan metodos de la clase
-    @Override
-    public void attack(Spell spell) {
-
-    }
-
 
     @Override
     public void recoverYourself(Integer magicPower) {
@@ -22,7 +17,7 @@ public class Elf extends Character {
     }
 
     @Override
-    public void receiveAttack(Integer damage, char position) {
+    public void receiveAttack(Integer damage, Integer magicPower, char position) {
 
     }
 
